@@ -1,24 +1,47 @@
-import "babel-polyfill";
-import 'whatwg-fetch'
-import {Article} from './Article';
+'use strict';
 
-(function(){
-const NEWSPATH = 'https://newsapi.org/v1/articles?source=bbc-news&apiKey=554109c975e14549b32eb8b2f41fe8f8';
-let container = document.getElementById('container');
-let articlesBuffer = ``;
-let news = fetch(NEWSPATH)
-  .then(function(response) {
+require('babel-polyfill');
+
+require('whatwg-fetch');
+
+var _Article = require('./Article');
+
+(function () {
+  var NEWSPATH = 'https://newsapi.org/v1/articles?source=bbc-news&apiKey=554109c975e14549b32eb8b2f41fe8f8';
+  var container = document.getElementById('container');
+  var articlesBuffer = '';
+  var news = fetch(NEWSPATH).then(function (response) {
     return response.json();
-   })
-  .then(function(response) {
+  }).then(function (response) {
 
     // iterator to display all articles
-    for (let data of response.articles) {
-      articlesBuffer += new Article(data).generate();
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = response.articles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var data = _step.value;
+
+        articlesBuffer += new _Article.Article(data).generate();
+      }
+
+      // add generated articles to content
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
     }
 
-    // add generated articles to content
     container.innerHTML = articlesBuffer;
-  })
-  .catch( alert );
+  }).catch(alert);
 })();
